@@ -183,6 +183,12 @@ class GameState:
     """
     return self.data.layout.walls
 
+  def hasCapsule(self, x, y):
+    for posX, posY in self.data.capsules:
+      if posX == x and posY == y:
+        return True
+    return False
+
   def hasFood(self, x, y):
     return self.data.food[x][y]
 

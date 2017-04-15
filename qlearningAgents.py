@@ -172,6 +172,9 @@ class ApproximateQAgent(PacmanQAgent):
     # You might want to initialize weights here.
     "*** YOUR CODE HERE ***"
     self.weights = util.Counter()
+    self.isStrlInitialized = False
+    self.visitAmount = [[[]]]
+    self.catchAmount = [[[]]]
 
   def getQValue(self, state, action):
     """
@@ -185,18 +188,48 @@ class ApproximateQAgent(PacmanQAgent):
     	qValue += (self.weights[key] * features[key])
     return qValue
 
-
   def update(self, state, action, nextState, reward):
     """
        Should update your weights based on transition
     """
     "*** YOUR CODE HERE ***"
     features = self.featExtractor.getFeatures(state, action)
+
+
+
+
+    "*** STRL CODE BEGIN ***"
+
+    pacmanX,pacmanY = state.getPacmanPosition()
+
+    if(not self.isStrlInitialized):
+      self.visitAmount = [[[0.0001 for i in xrange(1)] for j in xrange(state.data.layout.height)] for k in xrange(state.data.layout.width)]
+      self.catchAmount = [[[0 for i in xrange(1)] for j in xrange(state.data.layout.height)] for k in xrange(state.data.layout.width)]
+      self.isStrlInitialized = True
+    else:
+      "* Visit iteration *"
+      if len(self.visitAmount[pacmanX][pacmanY]) != state.getTimeTick():
+        self.visitAmount[pacmanX][pacmanY].append(1);
+      else:
+        self.visitAmount[pacmanX][pacmanY][state.getTimeTick()-1] += 1
+
+      "* Catch iteration *"
+      if len(self.catchAmount[pacmanX][pacmanY]) != state.getTimeTick():
+        self.catchAmount[pacmanX][pacmanY].append(1);
+
+      for gPosX, gPosY in state.getGhostPositions():
+       if state.isLose() or (gPosX == pacmanX and gPosY == pacmanY):
+          self.catchAmount[pacmanX][pacmanY][state.getTimeTick()-1] += 1
+
+    modifiedReward = 0.0
+    modifiedReward = reward - reward * self.catchAmount[pacmanX][pacmanY][state.getTimeTick()-1] / self.visitAmount[pacmanX][pacmanY][state.getTimeTick()-1]
+    "*** STRL CODE END ***"
+
     possibleStateQValues = []
     for act in self.getLegalActions(state):
     	possibleStateQValues.append(self.getQValue(state, act))
     for key in features.keys():
-    	self.weights[key] += self.alpha * (reward + self.discount * ((1-self.epsilon)*self.getValue(nextState)+(self.epsilon/len(possibleStateQValues))*(sum(possibleStateQValues))) - self.getQValue(state, action)) * features[key]
+    	self.weights[key] += self.alpha * (modifiedReward + self.discount * ((1-self.epsilon)*self.getValue(nextState)+(self.epsilon/len(possibleStateQValues))*(sum(possibleStateQValues))) - self.getQValue(state, action)) * features[key]
 
   def final(self, state):
     "Called at the end of each game."

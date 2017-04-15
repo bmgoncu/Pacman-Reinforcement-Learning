@@ -299,7 +299,7 @@ class PacmanGraphics:
 
   def animatePacman(self, pacman, prevPacman, image):
     if self.frameTime < 0:
-      print 'Press any key to step forward, "q" to play'
+      print ('Press any key to step forward, "q" to play')
       keys = wait_for_keys()
       if 'q' in keys:
         self.frameTime = 0.1
@@ -338,13 +338,13 @@ class PacmanGraphics:
 
     dx = 0
     dy = 0
-    if dir == 'North':
+    if (dir == 'North'):
       dy = -0.2
-    if dir == 'South':
+    if (dir == 'South'):
       dy = 0.2
-    if dir == 'East':
+    if (dir == 'East'):
       dx = 0.2
-    if dir == 'West':
+    if (dir == 'West'):
       dx = -0.2
     leftEye = circle((screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2, WHITE, WHITE)
     rightEye = circle((screen_x+self.gridSize*GHOST_SIZE*(0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2, WHITE, WHITE)
@@ -363,13 +363,13 @@ class PacmanGraphics:
     (screen_x, screen_y) = (self.to_screen(pos) )
     dx = 0
     dy = 0
-    if dir == 'North':
+    if dir == ('North'):
       dy = -0.2
-    if dir == 'South':
+    if dir == ('South'):
       dy = 0.2
-    if dir == 'East':
+    if dir == ('East'):
       dx = 0.2
-    if dir == 'West':
+    if dir == ('West'):
       dx = -0.2
     moveCircle(eyes[0],(screen_x+self.gridSize*GHOST_SIZE*(-0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2)
     moveCircle(eyes[1],(screen_x+self.gridSize*GHOST_SIZE*(0.3+dx/1.5), screen_y-self.gridSize*GHOST_SIZE*(0.3-dy/1.5)), self.gridSize*GHOST_SIZE*0.2)
@@ -572,14 +572,14 @@ class PacmanGraphics:
          refresh()
 
   def clearExpandedCells(self):
-    if 'expandedCells' in dir(self) and len(self.expandedCells) > 0:
+    if ('expandedCells' in dir(self) and len(self.expandedCells) > 0):
       for cell in self.expandedCells:
         remove_from_screen(cell)
 
 
   def updateDistributions(self, distributions):
     "Draws an agent's belief distributions"
-    if self.distributionImages == None:
+    if (self.distributionImages == None):
       self.drawDistributions(self.previousState)
     for x in range(len(self.distributionImages)):
       for y in range(len(self.distributionImages[0])):

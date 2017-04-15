@@ -10,5 +10,27 @@ $ python gridworld.py -a q -k 100
 $ python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumGrid
 $ python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l mediumClassic
 
+For STRL
+$ python pacman.py -p ApproximateQAgent -a extractor=SimpleExtractor -x 50 -n 60 -l originalClassic
+
 
 All the interesting code is in qlearningAgents.py and featureExtractors.py.
+
+----------------------------------------------------------------------------------------------------
+_____For Deep Learning Interface_____
+
+pacman => ApproximateQAgent 
+
+pacmanType = loadAgent("ApproximateQAgent", True)	## -p parametresi
+agentOpts = parseAgentArgs("extractor=SimpleExtractor") ## -a parametresi
+  if options.numTraining > 0:				## -x parametresi How many episodes are training (suppresses output)
+    args['numTraining'] = options.numTraining
+    if 'numTraining' not in agentOpts: agentOpts['numTraining'] = options.numTraining
+pacman = pacmanType(**agentOpts) 		# Instantiate Pacman with agentArgs
+
+
+
+
+args['pacman'] = pacman
+args['layout'] = layout.getLayout("originalClassic")	##-l parametresi
+args['numGames'] = 60					##-n parametresi the number of GAMES to play
